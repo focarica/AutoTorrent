@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 
 class Parser:
     def parser(self, html, limit: int = 5) -> dict:
-        soup = BeautifulSoup(html, 'html.parser')
+        soup = BeautifulSoup(html.html, 'html.parser')
         
         results: dict = {}
         

@@ -62,6 +62,6 @@ class Interface:
                     last_key = list(response.keys())[-1]
                     print(f"Please put a valid value between {first_key} and {last_key}.") 
                 else:
-                    return choice
+                    return response[choice]['link']
             except ValueError:
                 print("Enter a valid number or type 'q' to quit.")

@@ -13,7 +13,7 @@ class Interface:
     def _typeSearch(self) -> str:
         baseString = f"Searching for '{self.query}'"
         finalString = "Type 'q' to exit application."
-        
+                
         if self.category and self.sort_by:
             return f"{baseString} in {self.category} category ordered by {self.sort_by}. {finalString}"
         
@@ -23,7 +23,7 @@ class Interface:
         if self.sort_by:
             return f"{baseString} ordered by {self.sort_by}. {finalString}"
         
-        return baseString + {finalString}
+        return baseString + finalString
     
     
     def _printLongNames(self, name: str) -> str:
@@ -34,7 +34,7 @@ class Interface:
     
     def mainMenu(self, response: dict) -> int:
         system("clear")
-            
+        
         print(self._typeSearch() + "\n")
             
         for i, result in response.items():
@@ -65,3 +65,9 @@ class Interface:
                     return response[choice]['link']
             except ValueError:
                 print("Enter a valid number or type 'q' to quit.")
+    
+    # Add later
+    def specificTorrentPage(self, response: dict) -> str:
+        system("clear")
+        
+        

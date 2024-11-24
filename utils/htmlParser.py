@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 
 class Parser:
-    def parser(self, html, limit: int = 5) -> dict:
+    def searchParser(self, html, limit: int = 5) -> dict:
         soup = BeautifulSoup(html.html, 'html.parser')
         
         results: dict = {}
@@ -25,4 +25,46 @@ class Parser:
                 "size": infos[4].contents[0].text,
                 "from": infos[5].text 
             }
+            
         return results
+    
+    
+    def _findInfosTable(self, html) -> tuple:
+        soup = BeautifulSoup(html.html, 'html.parser')
+        
+        try:
+            # Since class for infos is dynamic created go to a fix class and search by childrens
+            tableInfos = soup.find("div",
+                                    attrs={
+                                        "class": "box-info torrent-detail-page"
+                                    }).findChildren("div")[1].findChild("div")
+                        
+            infosResult = tableInfos.find_all("ul")
+            
+            links = infosResult[0]
+            mainInfos = infosResult[2:]
+            
+        except AttributeError:
+            return {"error": "Return None"}
+        
+        return links, mainInfos
+    
+    
+    def infosParser(self, html) -> dict:
+        links = self._findInfosTable(html=html)[0]
+        mainInfos = self._findInfosTable(html=html)[1]
+        
+        results: dict = {}
+        magnetLink: str = links.find("li").find("a").get("href")
+        
+        results["magnetLink"] = magnetLink
+        
+        for info in mainInfos:
+            keys = info.findAll("strong")
+            values = info.findAll("span")
+            
+            for i in range(len(keys)):
+                results[keys[i].text] = values[i].text
+    
+        return results
+        

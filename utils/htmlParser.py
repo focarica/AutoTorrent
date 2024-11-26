@@ -33,6 +33,8 @@ class Parser:
         soup = BeautifulSoup(html.html, 'html.parser')
         
         try:
+            name = soup.find("div", attrs={"class": "box-info-heading clearfix"}).find("h1").text
+            
             # Since class for infos is dynamic created go to a fix class and search by childrens
             tableInfos = soup.find("div",
                                     attrs={
@@ -47,18 +49,22 @@ class Parser:
         except AttributeError:
             return {"error": "Return None"}
         
-        return links, mainInfos
+        return links, mainInfos, name
     
     
-    def infosParser(self, html) -> dict:
-        links = self._findInfosTable(html=html)[0]
-        mainInfos = self._findInfosTable(html=html)[1]
+    def infosParser(self, html) -> dict:        
+        allInfos = self._findInfosTable(html=html)
+        
+        links = allInfos[0]
+        mainInfos = allInfos[1]
+        name = allInfos[2]
         
         results: dict = {}
         magnetLink: str = links.find("li").find("a").get("href")
         
         results["magnetLink"] = magnetLink
-        
+        results["name"] = name
+
         for info in mainInfos:
             keys = info.findAll("strong")
             values = info.findAll("span")

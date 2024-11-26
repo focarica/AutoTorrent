@@ -5,13 +5,15 @@ from cli.commands import commands
 
 class Interface:
     def __init__(self) -> None:
+        self._stackParams = []
+        
         self.query = commands().name
         self.category = commands().category
         self.sort_by = commands().sort_by
         
         
     def _typeSearch(self) -> str:
-        baseString = f"Searching for '{self.query}'"
+        baseString = f"Searching for '{self.query}'. "
         finalString = "Type 'q' to exit application."
                 
         if self.category and self.sort_by:
@@ -62,12 +64,30 @@ class Interface:
                     last_key = list(response.keys())[-1]
                     print(f"Please put a valid value between {first_key} and {last_key}.") 
                 else:
+                    self._stackParams.append(response)
                     return response[choice]['link']
             except ValueError:
                 print("Enter a valid number or type 'q' to quit.")
     
-    # Add later
     def specificTorrentPage(self, response: dict) -> str:
         system("clear")
         
+        for key, infos in list(response.items())[1:]:
+            print(f"{key.capitalize()}: {infos}")
         
+        print("\nDo you want to start download? y/N")
+        print("Type 'n' if you want to go back to main menu.")
+        
+        while True:
+            choice = input("> ").lower()
+
+            if choice in ['n', 'y']:
+                if choice == 'y':
+                    pass
+                    # print("Your donwload is about to start.")
+                    # Function do download torrent
+                
+                if choice == 'n':
+                    self.mainMenu(self._stackParams[-1])
+            else:
+                print("Please put a valid answer")

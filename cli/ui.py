@@ -36,8 +36,7 @@ class Interface:
     
     def mainFlow(self, pageParsed) -> None:
         linkToDetails = self.mainMenu(response=pageParsed)
-        detailsPageHtml = Scraper().getSpecificTorrentPage(link=linkToDetails)                                                                                                        
-        detailsParsed = Parser().infosParser(html=detailsPageHtml)
+        detailsParsed = Scraper().getSpecificTorrentPage(link=linkToDetails)                                                                                                        
         
         self.specificTorrentPage(detailsParsed)   
     

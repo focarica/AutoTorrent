@@ -9,9 +9,7 @@ class App:
         self._interface = Interface()
         self._scraper = Scraper()
         
-        mainHtml = self._scraper.getHtml()
-        self._htmlParsed = self._parser.searchParser(html=mainHtml, limit=commands().limit)
+        self._mainHtml = self._scraper.getHtml()
 
-        
     def core(self):
-        self._interface.mainFlow(pageParsed=self._htmlParsed)
+        self._interface.mainFlow(pageParsed=self._mainHtml)

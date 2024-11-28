@@ -1,8 +1,10 @@
 from requests_html import HTMLSession
+from utils.htmlParser import Parser
 from cli.commands import commands
 
 class Scraper: 
     def __init__(self):
+        self._parser = Parser()
         self.BASE_URL = "https://1337x.to"
     
     def _makeSearchUrl(self) -> str:
@@ -26,7 +28,12 @@ class Scraper:
         response = session.get(url=self._makeSearchUrl())
         response.html.render()
         
-        return response.html
+        mainResponseParsed = self._parser.searchParser(
+                                                    html=response.html, 
+                                                    limit=commands().limit
+                                                    )
+        
+        return mainResponseParsed
 
     def getSpecificTorrentPage(self, link: str):        
         session = HTMLSession()
@@ -35,4 +42,6 @@ class Scraper:
         response = session.get(url=url)
         response.html.render()
         
-        return response.html
+        specificPageParsed = self._parser.infosParser(html=response.html)
+        
+        return specificPageParsed

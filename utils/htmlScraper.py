@@ -1,10 +1,12 @@
 from requests_html import HTMLSession
 from utils.htmlParser import Parser
+from utils.cacheManager import Cache
 from cli.commands import commands
 
 class Scraper: 
     def __init__(self):
         self._parser = Parser()
+        self._cache = Cache()
         self.BASE_URL = "https://1337x.to"
     
     def _makeSearchUrl(self) -> str:
@@ -35,13 +37,19 @@ class Scraper:
         
         return mainResponseParsed
 
-    def getSpecificTorrentPage(self, link: str):        
+    def getSpecificTorrentPage(self, link: str):              
+        cachedData = self._cache.get(link)
+        
+        if cachedData:
+            return cachedData
+        
         session = HTMLSession()
         url = f"{self.BASE_URL}{link}"
         
         response = session.get(url=url)
         response.html.render()
         
-        specificPageParsed = self._parser.infosParser(html=response.html)
+        specificPageParsed = self._parser.infosParser(html=response.html)        
+        self._cache.add(link, specificPageParsed)
         
         return specificPageParsed

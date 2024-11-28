@@ -1,7 +1,8 @@
 import sys
 from os import system
 from cli.commands import commands
-
+from utils.htmlParser import Parser
+from utils.htmlScraper import Scraper
 
 class Interface:
     def __init__(self) -> None:
@@ -10,7 +11,7 @@ class Interface:
         self.query = commands().name
         self.category = commands().category
         self.sort_by = commands().sort_by
-        
+                                                                                                                         
         
     def _typeSearch(self) -> str:
         baseString = f"Searching for '{self.query}'. "
@@ -33,6 +34,12 @@ class Interface:
             return f"{name[:64]}..."
         return name
     
+    def mainFlow(self, pageParsed) -> None:
+        linkToDetails = self.mainMenu(response=pageParsed)
+        detailsPageHtml = Scraper().getSpecificTorrentPage(link=linkToDetails)                                                                                                        
+        detailsParsed = Parser().infosParser(html=detailsPageHtml)
+        
+        self.specificTorrentPage(detailsParsed)   
     
     def mainMenu(self, response: dict) -> int:
         system("clear")
@@ -84,10 +91,10 @@ class Interface:
             if choice in ['n', 'y']:
                 if choice == 'y':
                     pass
-                    # print("Your donwload is about to start.")
+                    # print("Your download is about to start.")
                     # Function do download torrent
                 
-                if choice == 'n':
-                    self.mainMenu(self._stackParams[-1])
+                if choice == 'n':                    
+                    self.mainFlow(self._stackParams[-1])
             else:
                 print("Please put a valid answer")

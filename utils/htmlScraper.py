@@ -1,7 +1,6 @@
 from requests_html import HTMLSession
 from cli.commands import commands
 
-
 class Scraper: 
     def __init__(self):
         self.BASE_URL = "https://1337x.to"
@@ -29,7 +28,7 @@ class Scraper:
         
         return response.html
 
-    def getSpecificTorrentPage(self, link: str):
+    def getSpecificTorrentPage(self, link: str):        
         session = HTMLSession()
         url = f"{self.BASE_URL}{link}"
         

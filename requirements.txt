@@ -1,0 +1,4 @@
+beautifulsoup4==4.12.3
+libtorrent==2.0.9
+requests_html==0.10.0
+lxml_html_clean==0.4.1

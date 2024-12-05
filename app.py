@@ -1,6 +1,5 @@
 from utils.htmlScraper import Scraper
 from utils.htmlParser import Parser
-from cli.ui import commands
 from cli.ui import Interface
 
 class App:

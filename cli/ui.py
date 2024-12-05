@@ -1,16 +1,17 @@
 import sys
 from os import system
 from cli.commands import commands
-from utils.htmlParser import Parser
 from utils.htmlScraper import Scraper
+from download.donwload import Donwload
 
 class Interface:
     def __init__(self) -> None:
         self._stackParams = []
-        
         self.query = commands().name
         self.category = commands().category
         self.sort_by = commands().sort_by
+        self._scraper = Scraper()
+        self.handleDownload = Donwload()
                                                                                                                          
         
     def _typeSearch(self) -> str:
@@ -34,11 +35,6 @@ class Interface:
             return f"{name[:64]}..."
         return name
     
-    def mainFlow(self, pageParsed) -> None:
-        linkToDetails = self.mainMenu(response=pageParsed)
-        detailsParsed = Scraper().getSpecificTorrentPage(link=linkToDetails)                                                                                                        
-        
-        self.specificTorrentPage(detailsParsed)   
     
     def mainMenu(self, response: dict) -> int:
         system("clear")
@@ -75,6 +71,7 @@ class Interface:
             except ValueError:
                 print("Enter a valid number or type 'q' to quit.")
     
+    
     def specificTorrentPage(self, response: dict) -> str:
         system("clear")
         
@@ -87,13 +84,21 @@ class Interface:
         while True:
             choice = input("> ").lower()
 
-            if choice in ['n', 'y']:
+            if choice in ['n', 'y', '']:
                 if choice == 'y':
                     pass
-                    # print("Your download is about to start.")
-                    # Function do download torrent
+                    print("\nYour download is about to start.")
+                    self.handleDownload.download(response['magnetLink'])
                 
-                if choice == 'n':                    
+                if choice == 'n' or choice == '':                    
                     self.mainFlow(self._stackParams[-1])
             else:
                 print("Please put a valid answer")
+                
+    
+        
+    def mainFlow(self, pageParsed) -> None:
+        linkToDetails = self.mainMenu(response=pageParsed)
+        detailsParsed = self._scraper.getSpecificTorrentPage(link=linkToDetails)                                                                                                        
+        
+        self.specificTorrentPage(detailsParsed)   
